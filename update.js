@@ -68,6 +68,7 @@ async function run() {
 
     await db.ref('huntercoin/currentValue').set(next);
     await db.ref('huntercoin/lastUpdate').set(ts);
+    await db.ref('huntercoin/lastAutoUpdate').set(ts);
     await db.ref('huntercoin/history').push({ value: next, timestamp: ts });
 
     // Pulizia storico > 7 giorni
