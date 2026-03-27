@@ -15,6 +15,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '24'
+      - run: cat update.js
       - run: npm install firebase-admin
       - run: node update.js
         env:
