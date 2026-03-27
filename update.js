@@ -1,7 +1,17 @@
 const admin = require('firebase-admin');
 
-// Credenziali Firebase passate come variabile d'ambiente
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// Debug: verifica che la variabile esista
+const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+console.log('FIREBASE_SERVICE_ACCOUNT presente:', raw !== undefined);
+console.log('Lunghezza:', raw ? raw.length : 0);
+
+if (!raw) {
+  console.error('ERRORE: variabile FIREBASE_SERVICE_ACCOUNT non trovata.');
+  console.log('Variabili disponibili:', Object.keys(process.env).filter(k => !k.includes('TOKEN') && !k.includes('KEY')));
+  process.exit(1);
+}
+
+const serviceAccount = JSON.parse(raw);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
