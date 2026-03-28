@@ -27,7 +27,8 @@ function gbm(current) {
   const u = Math.random();
   const v = Math.random();
   const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  return Math.round(Math.min(Math.max(current * Math.exp(-0.5 * sigma * sigma + sigma * z), 200), 15000));
+  var mu = -0.01;
+  return Math.round(Math.min(Math.max(current * Math.exp((mu - 0.5 * sigma * sigma) + sigma * z), 200), 10000));
 }
 
 // Hunterday — stesso algoritmo del master
