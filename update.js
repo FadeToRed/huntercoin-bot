@@ -24,7 +24,7 @@ function gbm(current) {
   var mu = -0.01;
   return Math.round(Math.min(Math.max(current * Math.exp((mu - 0.5 * sigma * sigma) + sigma * z), 200), 10000));
 }
-// Hunterday: 5% al giorno, dura fino alle 23:59 del giorno stesso
+// Hunterday: 15% al giorno, dura fino alle 23:59 del giorno stesso
 async function checkHunterday(data) {
   const today = new Date().toISOString().split('T')[0];
   const hd = data.hunterday || {};
@@ -32,7 +32,7 @@ async function checkHunterday(data) {
     console.log('Hunterday: già controllato oggi (' + (hd.active ? 'ATTIVO' : 'inattivo') + ')');
     return hd.active || false;
   }
-  const isHD = Math.random() < 0.05;
+  const isHD = Math.random() < 0.15;
   await db.ref('huntercoin/hunterday').set({ active: isHD, lastChecked: today });
   console.log('Hunterday: ' + (isHD ? 'ATTIVO' : 'inattivo') + ' (nuovo controllo)');
   return isHD;
