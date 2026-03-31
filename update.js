@@ -21,7 +21,7 @@ function gbm(current) {
   const u = Math.random();
   const v = Math.random();
   const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  var mu = 0.003;
+  var mu = 0.002;
   return Math.round(Math.min(Math.max(current * Math.exp((mu - 0.5 * sigma * sigma) + sigma * z), 200), 10000));
 }
 // Hunterday: 15% al giorno, dura fino alle 23:59 del giorno stesso
