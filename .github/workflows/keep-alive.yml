@@ -2,7 +2,8 @@ name: Keep Alive
 
 on:
   schedule:
-    - cron: '0 12 1 * *'  # ogni 1° del mese a mezzogiorno
+    - cron: '0 12 1 * *'
+  workflow_dispatch:   # ← questa riga magica
 
 jobs:
   keep-alive:
