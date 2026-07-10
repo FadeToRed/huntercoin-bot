@@ -1,4 +1,6 @@
 const admin = require('firebase-admin');
+const { getApps, initializeApp, cert } = require('firebase-admin/app');
+const { getDatabase } = require('firebase-admin/database');
 // Debug: verifica che la variabile esista
 const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
 console.log('FIREBASE_SERVICE_ACCOUNT presente:', raw !== undefined);
@@ -9,11 +11,11 @@ if (!raw) {
   process.exit(1);
 }
 const serviceAccount = JSON.parse(raw);
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+initializeApp({
+  credential: cert(serviceAccount),
   databaseURL: "https://huntercoin-9fa34-default-rtdb.europe-west1.firebasedatabase.app"
 });
-const db = admin.database();
+const db = getDatabase();
 // GBM — stesso algoritmo del master
 function gbm(current) {
   const sigma = 0.08;
@@ -21,10 +23,10 @@ function gbm(current) {
   const u = Math.random();
   const v = Math.random();
   const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  var mu = 0.002;
+  var mu = -0.01;
   return Math.round(Math.min(Math.max(current * Math.exp((mu - 0.5 * sigma * sigma) + sigma * z), 200), 10000));
 }
-// Hunterday: 15% al giorno, dura fino alle 23:59 del giorno stesso
+// Hunterday: 5% al giorno, dura fino alle 23:59 del giorno stesso
 async function checkHunterday(data) {
   const today = new Date().toISOString().split('T')[0];
   const hd = data.hunterday || {};
@@ -32,7 +34,7 @@ async function checkHunterday(data) {
     console.log('Hunterday: già controllato oggi (' + (hd.active ? 'ATTIVO' : 'inattivo') + ')');
     return hd.active || false;
   }
-  const isHD = Math.random() < 0.15;
+  const isHD = Math.random() < 0.05;
   await db.ref('huntercoin/hunterday').set({ active: isHD, lastChecked: today });
   console.log('Hunterday: ' + (isHD ? 'ATTIVO' : 'inattivo') + ' (nuovo controllo)');
   return isHD;
