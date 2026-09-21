@@ -16,15 +16,20 @@ initializeApp({
   databaseURL: "https://huntercoin-9fa34-default-rtdb.europe-west1.firebasedatabase.app"
 });
 const db = getDatabase();
-// GBM — stesso algoritmo del master
+// Mean-reversion (Ornstein-Uhlenbeck in scala log) — curva volubile con ritorno al centro
+// center: valore attorno a cui gravita | theta: forza del richiamo | sigma: ampiezza degli shock
 function gbm(current) {
-  const sigma = 0.08;
+  const center = 1225; // media geometrica di 300 e 5000 -> estremi toccati con pari frequenza
+  const theta = 0.03;
+  const sigma = 0.20;
   // Box-Muller
   const u = Math.random();
   const v = Math.random();
   const z = Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
-  var mu = 0.004;
-  return Math.round(Math.min(Math.max(current * Math.exp((mu - 0.5 * sigma * sigma) + sigma * z), 200), 10000));
+  const logNext = Math.log(current)
+                + theta * (Math.log(center) - Math.log(current))
+                + sigma * z;
+  return Math.round(Math.min(Math.max(Math.exp(logNext), 300), 5000));
 }
 // Hunterday: 5% al giorno, dura fino alle 23:59 del giorno stesso
 async function checkHunterday(data) {
