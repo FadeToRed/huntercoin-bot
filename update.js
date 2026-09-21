@@ -39,7 +39,8 @@ async function checkHunterday(data) {
     console.log('Hunterday: già controllato oggi (' + (hd.active ? 'ATTIVO' : 'inattivo') + ')');
     return hd.active || false;
   }
-  const isHD = Math.random() < 0.05;
+  // 15% ~ approssima il ~19% reale della regola avkg (duplicato tra le prime 3 sequenze)
+  const isHD = Math.random() < 0.15;
   await db.ref('huntercoin/hunterday').set({ active: isHD, lastChecked: today });
   console.log('Hunterday: ' + (isHD ? 'ATTIVO' : 'inattivo') + ' (nuovo controllo)');
   return isHD;
